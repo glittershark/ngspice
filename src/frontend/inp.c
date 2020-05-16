@@ -822,6 +822,8 @@ inp_spsource(FILE *fp, bool comfile, char *filename, bool intfile)
                         ciprefix(".four", s) ||
                         eq(s, ".plot") ||
                         eq(s, ".print") ||
+                        eq(s, ".sndprint") ||
+                        eq(s, ".sndparam") ||
 /*                        eq(s, ".save") || add .save only after subcircuit expansion */
                         eq(s, ".op") ||
                         ciprefix(".meas", s) ||
