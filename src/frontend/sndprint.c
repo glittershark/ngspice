@@ -117,7 +117,7 @@ static void my_close_sf(void* d) {
 
 typedef struct SP_BUF {
 	double tme;
-	double* val;
+	float* val;
 } SP_BUF;
 
 static void (*p_close)(void*);
@@ -226,8 +226,8 @@ void snd_init(int nchannel) {
 	if (!filename) snd_configure("spice.wav", 48000, o_sndfmt, o_mult, o_off, oversampling);
 	outfile = p_open(filename, nchannel);
 	sp_nchannel = nchannel;
-	sp_buf = calloc(nchannel, sizeof(SP_BUF));
-	for (i = 0; i < SP_MAX; i++) {
+	sp_buf = calloc(SP_MAX, sizeof(SP_BUF));
+	for (i = 0; i < SP_MAX; ++i) {
 		sp_buf[i].tme = 0.0;
 		sp_buf[i].val = calloc(nchannel, sizeof(float));
 	}
@@ -241,12 +241,14 @@ void snd_init(int nchannel) {
 #endif
 }
 
-int snd_send(double tme, int c, double out) {
+int snd_send(double tme, int c, float out) {
 	int i;
 	int rv = 0;
+	float *last = sp_buf[SP_MAX - 1].val;
 	if (c == 0) for (i = SP_MAX - 1; i > 0; i--) {
 		memcpy(&(sp_buf[i]), &(sp_buf[i - 1]), sizeof(SP_BUF));
 	}
+	sp_buf[0].val = last;
 	sp_buf[0].tme = tme * OVERSAMPLING;
 	sp_buf[0].val[c] = out;
 #ifdef SND_DEBUG
@@ -302,13 +304,11 @@ void snd_close(void) {
 	free(interleaved);
 	free(resampled);
 #endif
-	/*
 	int i;
-	for (i=0; i< SP_MAX; i){
-	  free (sp_buf[i].val);
+	for (i=0; i < SP_MAX; ++i){
+	  free(sp_buf[i].val);
 	  sp_buf[i].val=NULL;
 	}
-	*/
 	free(sp_buf);
 }
 

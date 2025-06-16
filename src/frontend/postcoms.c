@@ -541,8 +541,10 @@ com_sndparam(wordlist* wl)
 
 	}
 
-	if (file)
+	if (file) {
 		snd_configure(file, srate, fmt, mult, off, oversampling);
+        free(file);
+    }
 	return;
 }
 
