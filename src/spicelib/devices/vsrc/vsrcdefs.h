@@ -154,8 +154,8 @@ enum {
     AM,
     TRNOISE,
     TRRANDOM,
-    EXTERNAL
-    SOUND,
+    EXTERNAL,
+    SOUND
 #ifdef RFSPICE
     ,
     PORT
